@@ -2,6 +2,7 @@ const express = require("express")
 const auth = require("./Routes/auth")
 const book = require("./Routes/book")
 const wishlist = require("./Routes/wishlist")
+const cart = require("./Routes/cart")
 const cors = require('cors');
 const mongoose = require("mongoose")
 const app = express()
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use("/auth", auth)
 app.use("/book", book)
 app.use("/wishlist", wishlist)
+app.use("/cart", cart)
 
 mongoose.connect(process.env.MONGO_URL).then( () =>{
     app.listen(process.env.PORT, () =>{

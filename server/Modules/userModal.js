@@ -30,6 +30,10 @@ const userSchema = new schema({
 
     wishlist: {
         type: Array,
+    },
+
+    cart: {
+        type: Array,
     }
 
 })
