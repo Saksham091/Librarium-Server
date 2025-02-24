@@ -1,12 +1,12 @@
 const router = require("express").Router();
-const blog = require("../Modules/bookModal");
+const book = require("../Modules/bookModal");
 
 router.post("/", async (req, res) => {
     console.log(req.body);
     const { name, image, author, description, price } = req.body;
 
     try {
-        const newBook = await blog.create({
+        const newBook = await book.create({
             name,
             image,
             author,
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
 
 router.get("/all", async (req, res) => {
     try {
-        const data = await blog.find();
+        const data = await book.find();
         res.status(200).json(data);
     } catch (error) {
         console.error(error);
@@ -34,7 +34,7 @@ router.get("/search/", async (req, res) => {
     try {
         console.log('Handling search request');
         const { q } = req.query;
-        const searchResults = await blog.find({ name: { $regex: new RegExp(q, 'i') } });
+        const searchResults = await book.find({ name: { $regex: new RegExp(q, 'i') } });
         res.status(200).json(searchResults);
     } catch (error) {
         console.error(error);
@@ -45,7 +45,7 @@ router.get("/search/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const book = await blog.findById(id);
+        const book = await book.findById(id);
         if (!book) {
             return res.status(404).json({ error: 'Book not found' });
         }

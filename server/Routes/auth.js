@@ -74,11 +74,11 @@ router.post('/login', async (req, res) => {
                     ]
                 });
             } else {
-                const token = await jwt.sign({
-                    email
-                }, process.env.JWT_SECRET, {
-                    expiresIn: 3600000
-                })
+                const token = await jwt.sign(
+                    { userId: oldUser._id },
+                    process.env.JWT_SECRET,
+                    { expiresIn: "1h" }
+                );
 
                 res.status(200).json({ token: `${token}` });
             }
