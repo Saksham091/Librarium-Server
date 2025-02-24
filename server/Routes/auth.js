@@ -26,21 +26,20 @@ router.post("/signup", async (req, res) => {
 
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
-
-            user.create({
+            
+            const newUser = await user.create({
                 firstName,
                 lastName,
                 email,
                 password: hashedPassword
             });
 
-            const token = await jwt.sign({
-                email
-            }, process.env.Key , {
-                expiresIn: 3600000
-            })
-
-            res.send(`Welcome New User ~ ${token}`);
+            const token = await jwt.sign(
+                { userId: newUser._id },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+            res.status(200).json({ token: `${token}` });
         }
     } catch (error) {
         console.error("An error occurred:", error);
@@ -77,11 +76,11 @@ router.post('/login', async (req, res) => {
             } else {
                 const token = await jwt.sign({
                     email
-                }, process.env.Key, {
+                }, process.env.JWT_SECRET, {
                     expiresIn: 3600000
                 })
 
-                res.status(200).json({token:`${token}`});
+                res.status(200).json({ token: `${token}` });
             }
         }
     } catch (error) {
