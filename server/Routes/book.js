@@ -2,7 +2,6 @@ const router = require("express").Router();
 const book = require("../Modules/bookModal");
 
 router.post("/", async (req, res) => {
-    console.log(req.body);
     const { name, image, author, description, price } = req.body;
 
     try {
@@ -45,11 +44,11 @@ router.get("/search/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const book = await book.findById(id);
-        if (!book) {
+        const bookById = await book.findById(id);
+        if (!bookById) {
             return res.status(404).json({ error: 'Book not found' });
         }
-        res.status(200).json(book);
+        res.status(200).json(bookById);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
