@@ -6,6 +6,7 @@ const user = require('../Modules/userModal');
 router.post("/", async (req, res) => {
     const { cart } = req.body;
     const { email } = req.user;
+    cart._id = (new Date().getTime()).toString();
 
     try {
         const userWithCart = await user.findOne({ email: email });
@@ -33,6 +34,29 @@ router.get("/all", async (req, res) => {
     }
 });
 
+router.delete("/delete/:id", async (req, res) => {
+    const { user_Id } = req.user;
+    const { id } = req.params;
+
+    try {
+        const userWithCart = await user.findOneAndUpdate(
+            { _id: user_Id },
+            {
+                $pull: { cart: { _id: id } }
+            },
+            { new: true }
+        );
+        if (!userWithCart) {
+            return res.status(400).json({ "error": [{ "msg": "Item not found.", }] });
+        } else {
+            return res.status(200).json({ "Message": [{ "msg": "Item deleted successfully.", }] });
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).json({ "error": [{ "msg": "Internal server error.", }] });
+    }
+});
+
 router.delete("/delete", async (req, res) => {
     const { email } = req.user;
 
@@ -52,6 +76,5 @@ router.delete("/delete", async (req, res) => {
         res.status(500).json({ "error": [{ "msg": "Internal server error.", }] });
     }
 });
-
 
 module.exports = router;

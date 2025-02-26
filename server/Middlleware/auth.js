@@ -19,6 +19,7 @@ const middleware = async (req, res, next) => {
         }
 
         req.user = {
+            user_Id: userData._id,
             email: userData.email,
             cart: userData.cart,
             wishlist: userData.wishlist

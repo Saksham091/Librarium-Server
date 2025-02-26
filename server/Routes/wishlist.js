@@ -6,6 +6,7 @@ const user = require('../Modules/userModal');
 router.post("/", async (req, res) => {
     const { email } = req.user
     const { wishlist } = req.body;
+    wishlist._id = (new Date().getTime()).toString();
 
     try {
         const userWithList = await user.findOne({ email: email });
@@ -33,19 +34,22 @@ router.get("/all", async (req, res) => {
     }
 });
 
-router.delete("/delete", async (req, res) => {
-    const { email } = req.user;
+router.delete("/delete/:id", async (req, res) => {
+    const { user_Id } = req.user;
+    const { id } = req.params;
 
     try {
-        const userWithWishlist = await user.findOne({ email: email });
-
+        const userWithWishlist = await user.findOneAndUpdate( 
+            {_id: user_Id},
+            {
+                 $pull:{ wishlist: {_id: id }  }
+            },
+            { new: true}
+        );
         if (!userWithWishlist) {
-            return res.status(400).json({
-                "error": [{"msg": "Email Not Found",}]
-            });
-        } else {
-            await userWithWishlist.updateOne({ $unset: { wishlist: 1 } });
-            return res.status(200).json({"message": "Wishlist removed successfully",});
+            return res.status(400).json({"error": [{"msg": "Item not found.",}]});
+        }else{
+            return res.status(200).json({"Message": [{"msg": "Item deleted successfully.",}]});
         }
     } catch (error) {
         console.error("An error occurred:", error);
