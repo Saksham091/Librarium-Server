@@ -68,7 +68,7 @@ router.delete("/delete", async (req, res) => {
                 "error": [{ "msg": "Email Not Found", }]
             });
         } else {
-            await userWithCartlist.updateOne({ $unset: { cart: 1 } });
+            await userWithCartlist.updateOne({ cart: [] });
             return res.status(200).json({ "message": "Cart removed successfully", });
         }
     } catch (error) {
