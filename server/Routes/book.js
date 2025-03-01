@@ -29,6 +29,17 @@ router.get("/all", async (req, res) => {
     }
 });
 
+router.get("/display", async (req, res) => {
+    try {
+        const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+        const data = await book.find().limit(limit);
+        res.status(200).json(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 router.get("/search/", async (req, res) => {
     try {
         console.log('Handling search request');
