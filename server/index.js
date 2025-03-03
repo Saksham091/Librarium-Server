@@ -6,7 +6,7 @@ const wishlist = require("./Routes/wishlist")
 const cart = require("./Routes/cart")
 const cors = require('cors');
 const mongoose = require("mongoose")
-const middleware = require("./Middlleware/auth")
+const middleware = require("./Middleware/auth")
 const app = express()
 require("dotenv").config()
 
